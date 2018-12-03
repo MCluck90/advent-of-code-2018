@@ -37,6 +37,33 @@ pub fn part1(input: &[String]) -> i32 {
 	exactly_two * exactly_three
 }
 
+#[aoc(day2, part2)]
+pub fn part2(input: &[String]) -> String {
+	for (i, id_a) in input.iter().enumerate() {
+		for j in (i + 1)..input.len() {
+			let id_b = input.get(j).unwrap();
+			let a_chars: Vec<char> = id_a.chars().collect();
+			let b_chars: Vec<char> = id_b.chars().collect();
+			let mut diffs = 0;
+			let mut same = String::new();
+			for n in 0..id_a.len() {
+				let char_a = a_chars.get(n).unwrap();
+				let char_b = b_chars.get(n).unwrap();
+				if char_a == char_b {
+					same.push(*char_a);
+				} else {
+					diffs += 1;
+				}
+			}
+
+			if diffs == 1 {
+				return same;
+			}
+		}
+	}
+	"".into()
+}
+
 #[cfg(test)]
 mod tests {
 	use super::*;
@@ -54,6 +81,22 @@ mod tests {
 				"ababab".into()
 			]),
 			12
+		);
+	}
+
+	#[test]
+	fn part2_sample1() {
+		assert_eq!(
+			part2(&vec![
+				"abcde".into(),
+				"fghij".into(),
+				"klmno".into(),
+				"pqrst".into(),
+				"fguij".into(),
+				"axcye".into(),
+				"wvxyz".into(),
+			]),
+			"fgij".to_string()
 		);
 	}
 }
