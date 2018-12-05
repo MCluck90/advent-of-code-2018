@@ -1,4 +1,6 @@
-#[derive(Debug, PartialEq)]
+use std::cmp::{max, min};
+
+#[derive(Clone, Debug, PartialEq)]
 pub struct Rect {
 	pub id: u32,
 	pub x: u32,
@@ -9,7 +11,6 @@ pub struct Rect {
 
 impl Rect {
 	pub fn overlap(&self, other: &Rect) -> Option<Rect> {
-		use std::cmp::{max, min};
 		if self.x < other.x + other.w
 			&& self.x + self.w > other.x
 			&& self.y < other.y + other.w
@@ -64,8 +65,34 @@ pub fn input_generator(input: &str) -> Vec<Rect> {
 }
 
 #[aoc(day3, part1)]
-pub fn part1(_claims: &[Rect]) -> u32 {
-	0
+pub fn part1(claims: &[Rect]) -> u32 {
+	let mut overlap: Option<Rect> = None;
+
+	for i in 0..claims.len() {
+		let left = &claims[i];
+		for j in i..claims.len() {
+			let right = &claims[j];
+			if let Some(collision) = left.overlap(&right) {
+				if let Some(old_overlap) = overlap {
+					overlap = Some(Rect {
+						id: 0,
+						x: min(old_overlap.x, collision.x),
+						y: min(old_overlap.y, collision.y),
+						w: max(old_overlap.w, collision.w),
+						h: max(old_overlap.h, collision.h),
+					});
+				} else {
+					overlap = Some(collision.clone());
+				}
+			}
+		}
+	}
+
+	if let Some(overlap) = overlap {
+		overlap.area()
+	} else {
+		0
+	}
 }
 
 #[cfg(test)]
