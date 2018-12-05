@@ -28,6 +28,10 @@ impl Rect {
 			None
 		}
 	}
+
+	pub fn area(&self) -> u32 {
+		self.w * self.h
+	}
 }
 
 #[aoc_generator(day3)]
@@ -169,6 +173,26 @@ mod tests {
 		};
 		let overlap = first.overlap(&second);
 		assert_eq!(overlap, None);
+	}
+
+	#[test]
+	fn area() {
+		let mut rect = Rect {
+			id: 0,
+			x: 0,
+			y: 0,
+			w: 0,
+			h: 0,
+		};
+		assert_eq!(rect.area(), 0);
+
+		rect.w = 2;
+		rect.h = 2;
+		assert_eq!(rect.area(), 4);
+
+		rect.w = 30;
+		rect.h = 3;
+		assert_eq!(rect.area(), 90);
 	}
 
 	#[test]
